@@ -6,6 +6,7 @@ import {
   Outlet 
 } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ProfileProvider } from './context/ProfileContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Explore from './pages/Explore';
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<MainLayout />}>
       <Route index element={<Home />} />
       <Route path="explore" element={<Explore />} />
+      <Route path="profile" element={<Profile />} />
       <Route path="profile/:id" element={<Profile />} />
       <Route path="edit-profile" element={<EditProfile />} />
       <Route path="login" element={<LogInPage />} />
@@ -40,7 +42,9 @@ const router = createBrowserRouter(
 const App = () => {
   return (
     <AuthProvider>
-      <RouterProvider router={router}/>
+      <ProfileProvider>
+        <RouterProvider router={router}/>
+      </ProfileProvider>
     </AuthProvider>
   );
 };

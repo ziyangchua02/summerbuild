@@ -50,7 +50,6 @@ const LogInPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Skip validation for demo - just check if fields are not empty
     if (!formData.email.trim() || !formData.password.trim()) {
       setErrors({ 
         general: 'Please enter both email and password to continue' 
@@ -62,24 +61,19 @@ const LogInPage = () => {
     setErrors({});
 
     try {
-      // Simulate a quick loading state
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      // Always "succeed" for demo purposes
       console.log('Demo login successful:', formData);
       
-      // Login the user using context
       login({
         email: formData.email,
-        name: formData.email.split('@')[0], // Use email prefix as name
+        name: formData.email.split('@')[0], 
         loginTime: new Date().toISOString()
       });
       
-      // Navigate to home page
       navigate('/');
       
     } catch (error) {
-      // This won't happen in demo mode, but keeping for completeness
       setErrors({ general: 'Something went wrong. Please try again.' });
     } finally {
       setIsLoading(false);

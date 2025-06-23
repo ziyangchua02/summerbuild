@@ -1,9 +1,90 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
 
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.text-animate-fadeInUp {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.text-animate-fadeInLeft {
+  animation: fadeInLeft 0.8s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.3s;
+}
+
 .home-container {
-  margin-left: 10rem;
-  padding-top: 8rem; 
+  padding-top: 4rem; 
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  margin: 0;
+  padding: 2rem 6rem 1rem 6rem;
+  gap: 0rem;
+  min-height: 55vh;
+}
+
+.hero-content {
+  flex: 1;
+  text-align: left;
+  max-width: 550px;
+}
+
+.hero-image {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-logo {
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
+  border-radius: 20px;
+  transition: transform 0.3s ease;
+  animation: fadeInRight 1s ease-out forwards;
+  opacity: 0;
+}
+
+.hero-logo:hover {
+  transform: scale(1.05);
+}
+
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .welcome-title {
@@ -18,6 +99,9 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-align: left;
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
 }
 
 .welcome-subtitle {
@@ -28,6 +112,20 @@
   margin-bottom: 2rem;
   line-height: 1.6;
   letter-spacing: -0.01em;
+  animation: fadeInLeft 0.8s ease-out forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+.brand-highlight {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
 }
 
 .welcome-title-auth {
@@ -35,13 +133,21 @@
   font-size: 3.5rem;
   font-weight: 700;
   color: #1a1a1a;
+  margin-top: 8rem;
   margin-bottom: 1.5rem;
   line-height: 1.1;
   letter-spacing: -0.02em;
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+  text-align: center;
+}
+
+.username-highlight {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-weight: 800;
 }
 
 .welcome-subtitle-auth {
@@ -49,7 +155,97 @@
   font-size: 1.25rem;
   font-weight: 400;
   color: #6b7280;
-  margin-bottom: 2rem;
+  margin-bottom: 8rem;
   line-height: 1.6;
   letter-spacing: -0.01em;
+  animation: fadeInLeft 0.8s ease-out forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+  text-align: center;
+}
+
+.typing-container {
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.typing-text {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.typed-skill {
+  color: #667eea;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.typing-cursor {
+  color: #667eea;
+  animation: blink 1s infinite;
+  font-weight: 400;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+    padding: 1rem;
+    min-height: auto;
+  }
+  
+  .hero-content {
+    max-width: 100%;
+  }
+  
+  .welcome-title {
+    font-size: 2.5rem;
+    text-align: center;
+  }
+  
+  .typing-text {
+    font-size: 1.8rem;
+  }
+  
+  .typing-container {
+    text-align: center;
+  }
+  
+  .hero-logo {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-title {
+    font-size: 2rem;
+  }
+  
+  .typing-text {
+    font-size: 1.5rem;
+  }
+  
+  .hero-logo {
+    width: 150px;
+    height: 150px;
+  }
 }
