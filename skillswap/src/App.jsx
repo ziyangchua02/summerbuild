@@ -14,6 +14,8 @@ import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
 import LogInPage from './pages/LogInPage';
 import SignUpPage from './pages/SignUpPage';
+import Chat from './pages/Chat';
+import ChatList from './pages/ChatList';
 import NotFound from './pages/NotFound';
 
 const MainLayout = () => {
@@ -55,6 +57,8 @@ const router = createBrowserRouter(
       <Route path="profile" element={<Profile />} />
       <Route path="profile/:id" element={<Profile />} />
       <Route path="edit-profile" element={<EditProfile />} />
+      <Route path="chats" element={<ChatList />} />
+      <Route path="chat" element={<Chat />} />
       <Route path="login" element={<LogInPage />} />
       <Route path="signup" element={<SignUpPage />} />
       <Route path="*" element={<NotFound />} />

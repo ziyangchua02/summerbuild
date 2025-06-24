@@ -46,6 +46,13 @@ const Navbar = () => {
               {isAuthenticated ? (
                 <>
                   <Link 
+                    to="/chats" 
+                    className={`nav-link ${isActive('/chats') ? 'active' : ''}`}
+                  >
+                    Chat
+                  </Link>
+                  
+                  <Link 
                     to="/profile" 
                     className={`nav-link ${isActive('/profile') ? 'active' : ''}`}
                   >
