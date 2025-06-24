@@ -1,12 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../context/ProfileContext';
+import { useAuth } from '../context/AuthContext';
 import '../styles/EditProfile.css';
 
 const EditProfile = () => {
-  const { profileData, updateProfile } = useProfile();
+  const { profileData, updateProfile, loading, error } = useProfile();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState(profileData);
+  const [formData, setFormData] = useState({
+    profileImageUrl: '',
+    fullName: '',
+    email: '',
+    aboutMe: '',
+    skillsOffered: [],
+    skillsWanted: []
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Update form data when profile data loads
+  useEffect(() => {
+    if (profileData) {
+      setFormData({
+        profileImageUrl: profileData.profileImageUrl || '',
+        fullName: profileData.fullName || '',
+        email: profileData.email || '',
+        aboutMe: profileData.aboutMe || '',
+        skillsOffered: profileData.skillsOffered?.length > 0 ? profileData.skillsOffered : [{ name: '', level: 'Beginner' }],
+        skillsWanted: profileData.skillsWanted?.length > 0 ? profileData.skillsWanted : [{ name: '', level: 'Beginner' }]
+      });
+    }
+  }, [profileData]);
 
   const skillLevels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
 
@@ -41,18 +73,127 @@ const EditProfile = () => {
     }));
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    updateProfile(formData);
-    console.log('Profile updated:', formData);
-    alert('Profile updated successfully!');
-    navigate('/profile');
+    setIsSubmitting(true);
+    setSubmitError('');
+    setSubmitSuccess(false);
+
+    try {
+      // Filter out empty skills before saving
+      const filteredFormData = {
+        ...formData,
+        skillsOffered: formData.skillsOffered.filter(skill => skill.name.trim() !== ''),
+        skillsWanted: formData.skillsWanted.filter(skill => skill.name.trim() !== '')
+      };
+
+      const result = await updateProfile(filteredFormData);
+      
+      if (result.success) {
+        setSubmitSuccess(true);
+        
+        // Show warning if database table doesn't exist
+        if (result.warning) {
+          setSubmitError(result.warning);
+          setTimeout(() => {
+            setSubmitError('');
+          }, 5000);
+        }
+        
+        setTimeout(() => {
+          navigate('/profile');
+        }, 1500); // Navigate after showing success message
+      } else {
+        setSubmitError(result.error || 'Failed to update profile. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      setSubmitError('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  // Show loading state while profile data is being fetched
+  if (loading && !profileData.email) {
+    return (
+      <div className="edit-profile">
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '50vh',
+          fontSize: '18px',
+          color: '#666'
+        }}>
+          Loading profile...
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if there's an error loading profile
+  if (error) {
+    return (
+      <div className="edit-profile">
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '50vh',
+          fontSize: '18px',
+          color: '#dc3545'
+        }}>
+          <p>Error loading profile: {error}</p>
+          <button onClick={() => window.location.reload()} style={{
+            padding: '10px 20px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginTop: '10px'
+          }}>
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="edit-profile">
       <form onSubmit={handleSave}>
         <h1>Edit Profile</h1>
+        
+        {/* Success/Error Messages */}
+        {submitSuccess && (
+          <div style={{
+            padding: '12px',
+            backgroundColor: '#d4edda',
+            color: '#155724',
+            border: '1px solid #c3e6cb',
+            borderRadius: '5px',
+            marginBottom: '20px'
+          }}>
+            Profile updated successfully! Redirecting...
+          </div>
+        )}
+        
+        {submitError && (
+          <div style={{
+            padding: '12px',
+            backgroundColor: '#f8d7da',
+            color: '#721c24',
+            border: '1px solid #f5c6cb',
+            borderRadius: '5px',
+            marginBottom: '20px'
+          }}>
+            {submitError}
+          </div>
+        )}
+
         {/* Profile Picture Section */}
         <div className="form-group">
           <label className="form-label">Profile Picture</label>
@@ -195,8 +336,12 @@ const EditProfile = () => {
         </div>
 
         {/* Save Button */}
-        <button type="submit" className="save-button">
-          Save Changes
+        <button 
+          type="submit" 
+          className={`save-button ${isSubmitting ? 'loading' : ''}`}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Saving...' : 'Save Changes'}
         </button>
       </form>
     </div>

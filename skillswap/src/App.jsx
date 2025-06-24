@@ -13,6 +13,7 @@ import Explore from './pages/Explore';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
 import LogInPage from './pages/LogInPage';
+import SignUpPage from './pages/SignUpPage';
 import NotFound from './pages/NotFound';
 
 const MainLayout = () => {
@@ -55,6 +56,7 @@ const router = createBrowserRouter(
       <Route path="profile/:id" element={<Profile />} />
       <Route path="edit-profile" element={<EditProfile />} />
       <Route path="login" element={<LogInPage />} />
+      <Route path="signup" element={<SignUpPage />} />
       <Route path="*" element={<NotFound />} />
     </Route>
   )

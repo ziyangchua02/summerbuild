@@ -76,6 +76,43 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const signup = async (email, password) => {
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          // Disable email confirmation for development
+          data: {
+            email_confirm: false
+          }
+        }
+      });
+
+      if (error) {
+        console.error('Supabase signup error:', error);
+        
+        // If it's an email validation error, try to provide a more helpful message
+        if (error.message.includes('Invalid email') || error.message.includes('email address')) {
+          return { 
+            success: false, 
+            error: 'Email validation failed. Please check your Supabase project settings to allow test emails.' 
+          };
+        }
+        
+        throw error;
+      }
+
+      console.log('Signup successful:', data);
+      
+      return { success: true, user: data.user };
+    } catch (error) {
+      console.error('Signup error:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
   const logout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -91,6 +128,7 @@ export const AuthProvider = ({ children }) => {
     user,
     loading,
     login,
+    signup,
     logout
   };
 

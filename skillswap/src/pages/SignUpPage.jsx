@@ -3,12 +3,13 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/LoginPage.css';
 
-const LogInPage = () => {
-  const { login } = useAuth();
+const SignUpPage = () => {
+  const { signup } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -44,6 +45,12 @@ const LogInPage = () => {
       newErrors.password = 'Password must be at least 6 characters';
     }
 
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
     return newErrors;
   };
 
@@ -60,27 +67,31 @@ const LogInPage = () => {
     setErrors({});
 
     try {
-      const result = await login(formData.email, formData.password);
+      const result = await signup(formData.email, formData.password);
+      
+      console.log('Signup result:', result); // Debug logging
       
       if (result.success) {
-        console.log('Login successful:', result.user);
+        console.log('Signup successful:', result.user);
         navigate('/');
       } else {
-
-        let errorMessage = 'Login failed. Please try again.';
+        let errorMessage = result.error || 'Failed to create account. Please try again.';
         
-        if (result.error.includes('Invalid login credentials')) {
-          errorMessage = 'Invalid email or password. Please check your credentials.';
-        } else if (result.error.includes('Email not confirmed')) {
-          errorMessage = 'Please check your email and confirm your account before signing in.';
-        } else if (result.error.includes('Too many requests')) {
-          errorMessage = 'Too many login attempts. Please wait a moment and try again.';
+        if (result.error.includes('User already registered')) {
+          errorMessage = 'An account with this email already exists. Try signing in instead.';
+        } else if (result.error.includes('Password should be at least 6 characters')) {
+          errorMessage = 'Password must be at least 6 characters long.';
+        } else if (result.error.includes('Invalid email')) {
+          errorMessage = 'Please enter a valid email address.';
+        } else if (result.error.includes('email to confirm')) {
+          errorMessage = 'Account created! Please check your email to confirm your account before signing in.';
         }
         
+        console.error('Signup failed:', result.error); // Debug logging
         setErrors({ general: errorMessage });
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Signup error:', error);
       setErrors({ general: 'Something went wrong. Please try again.' });
     } finally {
       setIsLoading(false);
@@ -91,8 +102,8 @@ const LogInPage = () => {
     <div className="login-page">
       <div className="login-container">
         <div className="login-header">
-          <h1>Welcome Back</h1>
-          <p>Sign in to your SkillSwap account</p>
+          <h1>Join SkillSwap</h1>
+          <p>Create your account to start skill sharing</p>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
@@ -128,7 +139,7 @@ const LogInPage = () => {
               value={formData.password}
               onChange={handleInputChange}
               className={errors.password ? 'error' : ''}
-              placeholder="Enter your password"
+              placeholder="Create a password (min 6 characters)"
               disabled={isLoading}
             />
             {errors.password && (
@@ -136,13 +147,21 @@ const LogInPage = () => {
             )}
           </div>
 
-          <div className="form-options">
-            <label className="checkbox-container">
-              <input type="checkbox" />
-              <span className="checkmark"></span>
-              Remember me
-            </label>
-            <a href="#" className="forgot-password">Forgot password?</a>
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              className={errors.confirmPassword ? 'error' : ''}
+              placeholder="Confirm your password"
+              disabled={isLoading}
+            />
+            {errors.confirmPassword && (
+              <span className="error-message">{errors.confirmPassword}</span>
+            )}
           </div>
 
           <button 
@@ -150,16 +169,16 @@ const LogInPage = () => {
             className={`login-button ${isLoading ? 'loading' : ''}`}
             disabled={isLoading}
           >
-            {isLoading ? 'Signing in...' : 'Sign In'}
+            {isLoading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
         <div className="login-footer">
-          <p>Don't have an account? <Link to="/signup" className="signup-link">Sign up</Link></p>
+          <p>Already have an account? <Link to="/login" className="signup-link">Sign in</Link></p>
         </div>
       </div>
     </div>
   );
 };
 
-export default LogInPage;
+export default SignUpPage;
