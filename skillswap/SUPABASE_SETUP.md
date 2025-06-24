@@ -24,6 +24,7 @@
    - `user_id` (UUID, Foreign Key)
    - `full_name` (Text)
    - `email` (Text)
+   - `location` (Text, Default: 'Singapore')
    - `about_me` (Text)
    - `profile_image_url` (Text)
    - `skills_offered` (JSONB)

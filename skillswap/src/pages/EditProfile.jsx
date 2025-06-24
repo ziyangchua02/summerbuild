@@ -12,6 +12,7 @@ const EditProfile = () => {
     profileImageUrl: '',
     fullName: '',
     email: '',
+    location: '',
     aboutMe: '',
     skillsOffered: [],
     skillsWanted: []
@@ -33,6 +34,7 @@ const EditProfile = () => {
         profileImageUrl: profileData.profileImageUrl || '',
         fullName: profileData.fullName || '',
         email: profileData.email || '',
+        location: profileData.location || 'Singapore',
         aboutMe: profileData.aboutMe || '',
         skillsOffered: profileData.skillsOffered?.length > 0 ? profileData.skillsOffered : [{ name: '', level: 'Beginner' }],
         skillsWanted: profileData.skillsWanted?.length > 0 ? profileData.skillsWanted : [{ name: '', level: 'Beginner' }]
@@ -238,6 +240,19 @@ const EditProfile = () => {
             value={formData.email}
             onChange={handleInputChange}
             required
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label" htmlFor="location">Location</label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            className="form-input"
+            value={formData.location}
+            onChange={handleInputChange}
+            placeholder="Enter your location"
           />
         </div>
 

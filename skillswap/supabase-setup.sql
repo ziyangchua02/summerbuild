@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE UNIQUE NOT NULL,
   full_name TEXT,
   email TEXT,
+  location TEXT DEFAULT 'Singapore',
   about_me TEXT,
   profile_image_url TEXT,
   skills_offered JSONB DEFAULT '[]'::jsonb,

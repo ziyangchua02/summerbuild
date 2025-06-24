@@ -19,6 +19,7 @@ const Profile = () => {
         <div className="profile-info">
           <h1>{profileData.fullName}</h1>
           <p>{profileData.email}</p>
+          <p className="profile-location">📍 {profileData.location || 'Singapore'}</p>
           <Link to="/edit-profile" className="edit-button">
             Edit Profile
           </Link>

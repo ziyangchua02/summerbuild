@@ -18,6 +18,7 @@ export const ProfileProvider = ({ children }) => {
     profileImageUrl: '',
     fullName: '',
     email: '',
+    location: '',
     aboutMe: '',
     skillsOffered: [],
     skillsWanted: []
@@ -35,6 +36,7 @@ export const ProfileProvider = ({ children }) => {
         profileImageUrl: '',
         fullName: '',
         email: '',
+        location: '',
         aboutMe: '',
         skillsOffered: [],
         skillsWanted: []
@@ -67,6 +69,7 @@ export const ProfileProvider = ({ children }) => {
             profileImageUrl: '',
             fullName: user.name || '',
             email: user.email || '',
+            location: 'Singapore',
             aboutMe: '',
             skillsOffered: [],
             skillsWanted: []
@@ -81,6 +84,7 @@ export const ProfileProvider = ({ children }) => {
           profileImageUrl: data.profile_image_url || '',
           fullName: data.full_name || '',
           email: data.email || user.email || '',
+          location: data.location || 'Singapore',
           aboutMe: data.about_me || '',
           skillsOffered: data.skills_offered || [],
           skillsWanted: data.skills_wanted || []
@@ -91,6 +95,7 @@ export const ProfileProvider = ({ children }) => {
           profileImageUrl: '',
           fullName: user.name || '',
           email: user.email || '',
+          location: 'Singapore',
           aboutMe: '',
           skillsOffered: [],
           skillsWanted: []
@@ -106,6 +111,7 @@ export const ProfileProvider = ({ children }) => {
           profileImageUrl: '',
           fullName: user?.name || '',
           email: user?.email || '',
+          location: 'Singapore',
           aboutMe: '',
           skillsOffered: [],
           skillsWanted: []
@@ -128,6 +134,7 @@ export const ProfileProvider = ({ children }) => {
         user_id: user.id,
         full_name: newProfileData.fullName,
         email: newProfileData.email,
+        location: newProfileData.location,
         about_me: newProfileData.aboutMe,
         profile_image_url: newProfileData.profileImageUrl,
         skills_offered: newProfileData.skillsOffered,
