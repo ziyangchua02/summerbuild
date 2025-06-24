@@ -194,45 +194,24 @@ const Chat = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim() || !conversationId || !user?.id) return;
+    if (!newMessage.trim()) return;
 
     const messageText = newMessage.trim();
-    setNewMessage(''); // Clear input immediately for better UX
+    setNewMessage(''); // Clear input immediately
 
-    try {
-      // Save message to database
-      const { data: savedMessage, error } = await supabase
-        .from('messages')
-        .insert({
-          conversation_id: conversationId,
-          sender_id: user.id,
-          content: messageText
-        })
-        .select('*')
-        .single();
+    // Create new message object
+    const newMessageObj = {
+      id: `msg-${Date.now()}`, // Simple ID based on timestamp
+      text: messageText,
+      sender: currentUser,
+      timestamp: new Date(),
+      isCurrentUser: true
+    };
 
-      if (error) {
-        console.error('Error sending message:', error);
-        setNewMessage(messageText); // Restore message if failed
-        return;
-      }
-
-      // Add message to local state for immediate display
-      const formattedMessage = {
-        id: savedMessage.id,
-        text: messageText,
-        sender: currentUser,
-        timestamp: new Date(savedMessage.created_at),
-        isCurrentUser: true
-      };
-
-      setMessages(prev => [...prev, formattedMessage]);
-      
-      console.log('Message sent successfully:', savedMessage);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      setNewMessage(messageText); // Restore message if failed
-    }
+    // Add message to UI immediately
+    setMessages(prev => [...prev, newMessageObj]);
+    
+    console.log('✅ Message added to chat:', newMessageObj);
   };
 
   const formatTime = (timestamp) => {

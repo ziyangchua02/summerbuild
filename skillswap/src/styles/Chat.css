@@ -1,22 +1,20 @@
-/* Chat Container */
 .chat-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: transparent; /* Remove background from outer container */
+  background-color: transparent; 
   color: #333333;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  padding: 130px 40px 40px 40px; /* Increase top padding to shift chat lower */
+  padding: 130px 40px 40px 40px; 
   max-width: 700px; 
   margin: 0 auto;
   box-sizing: border-box;
 }
 
-/* Inner chat interface */
 .chat-interface {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 170px); /* Adjust height to account for increased container padding */
+  height: calc(100vh - 170px); 
   background-color: #ffffff;
   border-radius: 20px;
   overflow: hidden;
@@ -69,13 +67,12 @@
   margin-right: 12px;
   font-size: 18px;
   color: white;
-  border: 2px solid #ffffff; /* Add white border to enhance circular appearance */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow for depth */
-  flex-shrink: 0; /* Prevent avatar from being compressed */
-  overflow: hidden; /* Ensure image stays within circular bounds */
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
+  flex-shrink: 0; 
+  overflow: hidden;
 }
 
-/* Style for profile image inside avatar */
 .avatar-image {
   width: 100%;
   height: 100%;
@@ -86,7 +83,6 @@
 .chat-avatar svg {
   width: 18px;
   height: 18px;
-  /* Remove distorting styles */
 }
 
 .chat-user-details {

@@ -24,7 +24,7 @@ const Explore = () => {
         setLoading(true);
         setError(null);
 
-        // Get ALL profiles from the database - no user exclusion
+        // Get all profiles from the database and filter out current user
         console.log('📡 Querying Supabase profiles table...');
         
         // First try a simple query with no ordering
@@ -80,18 +80,20 @@ const Explore = () => {
 
         // Transform the data to match the component's expected format
         console.log('🔄 Transforming data...');
-        const transformedUsers = (data || []).map(profile => ({
-          id: profile.id,
-          name: profile.full_name || 'Anonymous User',
-          location: profile.location || 'Location not specified',
-          profileImage: profile.profile_image_url || "https://via.placeholder.com/80",
-          skillsOffered: profile.skills_offered || [],
-          skillsWanted: profile.skills_wanted || [],
-          isCurrentUser: profile.user_id === user?.id // Flag to identify current user
-        }));
+        const transformedUsers = (data || [])
+          .filter(profile => profile.user_id !== user?.id) // Filter out the current user
+          .map(profile => ({
+            id: profile.id,
+            name: profile.full_name || 'Anonymous User',
+            location: profile.location || 'Location not specified',
+            profileImage: profile.profile_image_url || "https://via.placeholder.com/80",
+            skillsOffered: profile.skills_offered || [],
+            skillsWanted: profile.skills_wanted || [],
+            isCurrentUser: false // Always false since we filtered out the current user
+          }));
 
-        console.log('✨ Transformed users:', transformedUsers);
-        console.log('✨ Setting users state with', transformedUsers.length, 'users');
+        console.log('✨ Transformed users (excluding current user):', transformedUsers);
+        console.log('✨ Setting users state with', transformedUsers.length, 'users (current user filtered out)');
 
         setUsers(transformedUsers);
       } catch (error) {
