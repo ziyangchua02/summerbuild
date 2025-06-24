@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBrain, FaBullseye, FaMapMarkerAlt, FaUserPlus } from 'react-icons/fa';
+import { FaBrain, FaBullseye, FaMapMarkerAlt, FaUserPlus, FaSearch } from 'react-icons/fa';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Explore.css';
@@ -11,6 +11,7 @@ const Explore = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Fetch ALL users' profiles from Supabase (no filtering)
   useEffect(() => {
@@ -161,11 +162,36 @@ const Explore = () => {
     }
   };
 
+  // Filter users based on search term
+  const filteredUsers = users.filter(user => {
+    if (!searchTerm.trim()) return true; // Show all users if no search term
+    
+    const searchLower = searchTerm.toLowerCase();
+    
+    // Search through skills offered (what they can teach)
+    const hasMatchingSkillOffered = user.skillsOffered.some(skill => 
+      skill.name.toLowerCase().includes(searchLower)
+    );
+    
+    // Search through skills wanted (what they want to learn)
+    const hasMatchingSkillWanted = user.skillsWanted.some(skill => 
+      skill.name.toLowerCase().includes(searchLower)
+    );
+    
+    // Also search in user name and location
+    const hasMatchingInfo = user.name.toLowerCase().includes(searchLower) ||
+                           user.location.toLowerCase().includes(searchLower);
+    
+    return hasMatchingSkillOffered || hasMatchingSkillWanted || hasMatchingInfo;
+  });
+
   // Debug: Log current component state
   console.log('🎨 Render state:', {
     loading,
     error,
     usersLength: users.length,
+    filteredUsersLength: filteredUsers.length,
+    searchTerm,
     users: users
   });
 
@@ -173,7 +199,35 @@ const Explore = () => {
     <div className="explore">
       <div className="explore-header">
         <h1>Explore Skills</h1>
-        <p>Discover talented people in your community and connect for skill exchanges</p>
+      </div>
+
+      {/* Search Filter */}
+      <div className="search-container">
+        <div className="search-input-wrapper">
+          <FaSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search for skills you want to learn..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+          {searchTerm && (
+            <button 
+              onClick={() => setSearchTerm('')}
+              className="clear-search"
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </div>
+        {searchTerm && (
+          <div className="search-results-info">
+            Found {filteredUsers.length} user{filteredUsers.length !== 1 ? 's' : ''} 
+            {searchTerm && ` matching "${searchTerm}"`}
+          </div>
+        )}
       </div>
 
       {/* Loading State */}
@@ -232,10 +286,41 @@ const Explore = () => {
         </div>
       )}
 
+      {/* No Search Results State */}
+      {!loading && !error && users.length > 0 && filteredUsers.length === 0 && searchTerm && (
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '3rem 2rem',
+          backgroundColor: '#f8f9fa',
+          borderRadius: '12px',
+          margin: '2rem 0'
+        }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
+          <h3 style={{ color: '#495057', marginBottom: '1rem' }}>No Results Found</h3>
+          <p style={{ color: '#666', fontSize: '1.1rem', marginBottom: '1.5rem' }}>
+            No users found with skills matching "{searchTerm}".
+          </p>
+          <button 
+            onClick={() => setSearchTerm('')}
+            style={{
+              backgroundColor: '#007bff',
+              color: 'white',
+              border: 'none',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem'
+            }}
+          >
+            Clear Search
+          </button>
+        </div>
+      )}
+
       {/* Users Grid */}
-      {!loading && !error && users.length > 0 && (
+      {!loading && !error && filteredUsers.length > 0 && (
         <div className="users-grid">
-          {users.map(user => (
+          {filteredUsers.map(user => (
             <div key={user.id} className="user-card">
               {/* User Header */}
               <div className="user-header">
