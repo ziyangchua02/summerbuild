@@ -150,6 +150,8 @@ export const ProfileProvider = ({ children }) => {
         });
 
       if (error) {
+        console.error('Supabase error details:', error);
+        
         // Handle table not found error
         if (error.code === '42P01' || error.message?.includes('relation "profiles" does not exist')) {
           console.warn('Profiles table does not exist. Please run the SQL setup in Supabase.');
@@ -160,6 +162,23 @@ export const ProfileProvider = ({ children }) => {
             warning: 'Profile saved locally. Database table not found - please set up Supabase table.' 
           };
         }
+        
+        // Handle authentication errors
+        if (error.code === 'PGRST301' || error.message?.includes('JWT')) {
+          return {
+            success: false,
+            error: 'Authentication failed. Please log in again.'
+          };
+        }
+        
+        // Handle RLS policy errors
+        if (error.code === 'PGRST116' || error.message?.includes('permission denied') || error.message?.includes('policy')) {
+          return {
+            success: false,
+            error: 'Permission denied. Please check if you are logged in and the database is properly configured.'
+          };
+        }
+        
         throw error;
       }
 

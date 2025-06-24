@@ -168,7 +168,7 @@ const EditProfile = () => {
     <div className="edit-profile">
       <form onSubmit={handleSave}>
         <h1>Edit Profile</h1>
-        
+
         {/* Success/Error Messages */}
         {submitSuccess && (
           <div style={{
