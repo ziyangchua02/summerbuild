@@ -20,7 +20,7 @@ const LogInPage = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
+
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -50,10 +50,9 @@ const LogInPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.email.trim() || !formData.password.trim()) {
-      setErrors({ 
-        general: 'Please enter both email and password to continue' 
-      });
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
@@ -61,19 +60,27 @@ const LogInPage = () => {
     setErrors({});
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 800));
+      const result = await login(formData.email, formData.password);
       
-      console.log('Demo login successful:', formData);
-      
-      login({
-        email: formData.email,
-        name: formData.email.split('@')[0], 
-        loginTime: new Date().toISOString()
-      });
-      
-      navigate('/');
-      
+      if (result.success) {
+        console.log('Login successful:', result.user);
+        navigate('/');
+      } else {
+
+        let errorMessage = 'Login failed. Please try again.';
+        
+        if (result.error.includes('Invalid login credentials')) {
+          errorMessage = 'Invalid email or password. Please check your credentials.';
+        } else if (result.error.includes('Email not confirmed')) {
+          errorMessage = 'Please check your email and confirm your account before signing in.';
+        } else if (result.error.includes('Too many requests')) {
+          errorMessage = 'Too many login attempts. Please wait a moment and try again.';
+        }
+        
+        setErrors({ general: errorMessage });
+      }
     } catch (error) {
+      console.error('Login error:', error);
       setErrors({ general: 'Something went wrong. Please try again.' });
     } finally {
       setIsLoading(false);

@@ -5,7 +5,7 @@ import {
   RouterProvider,
   Outlet 
 } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProfileProvider } from './context/ProfileContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -23,6 +23,27 @@ const MainLayout = () => {
       <Outlet />
     </>
   );
+};
+
+const AppContent = () => {
+  const { loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '18px',
+        color: '#666'
+      }}>
+        Loading...
+      </div>
+    );
+  }
+
+  return <RouterProvider router={router} />;
 };
 
 const router = createBrowserRouter(
@@ -43,7 +64,7 @@ const App = () => {
   return (
     <AuthProvider>
       <ProfileProvider>
-        <RouterProvider router={router}/>
+        <AppContent />
       </ProfileProvider>
     </AuthProvider>
   );
