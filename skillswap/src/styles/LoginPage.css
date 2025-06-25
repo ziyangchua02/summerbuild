@@ -207,7 +207,6 @@
   text-decoration: underline;
 }
 
-/* Mobile responsive */
 @media (max-width: 480px) {
   .login-page {
     padding: 1rem;

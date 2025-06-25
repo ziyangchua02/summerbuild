@@ -27,7 +27,6 @@ const EditProfile = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  // Update form data when profile data loads
   useEffect(() => {
     if (profileData) {
       setFormData({
@@ -94,7 +93,6 @@ const EditProfile = () => {
       if (result.success) {
         setSubmitSuccess(true);
         
-        // Show warning if database table doesn't exist
         if (result.warning) {
           setSubmitError(result.warning);
           setTimeout(() => {
@@ -104,7 +102,7 @@ const EditProfile = () => {
         
         setTimeout(() => {
           navigate('/profile');
-        }, 1500); // Navigate after showing success message
+        }, 1500); 
       } else {
         setSubmitError(result.error || 'Failed to update profile. Please try again.');
       }
@@ -116,7 +114,6 @@ const EditProfile = () => {
     }
   };
 
-  // Show loading state while profile data is being fetched
   if (loading && !profileData.email) {
     return (
       <div className="edit-profile">
@@ -134,7 +131,6 @@ const EditProfile = () => {
     );
   }
 
-  // Show error state if there's an error loading profile
   if (error) {
     return (
       <div className="edit-profile">

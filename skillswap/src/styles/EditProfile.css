@@ -76,7 +76,6 @@ textarea.form-input {
   max-width: 300px;
 }
 
-/* Save Button */
 .save-button {
   width: 100%;
   max-width: 200px;
@@ -133,7 +132,6 @@ textarea.form-input {
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Skills Section Styling */
 .skills-container {
   display: flex;
   flex-direction: column;
@@ -200,7 +198,6 @@ textarea.form-input {
   transform: translateY(-1px);
 }
 
-/* Responsive adjustments for skills */
 @media (max-width: 768px) {
   .edit-profile {
     padding: 6rem 1rem 2rem 1rem;
